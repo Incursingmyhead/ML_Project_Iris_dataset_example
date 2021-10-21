@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<!-- reference: https://blog.csdn.net/AS_Tammy/article/details/80934706 -->
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Header</title>
+<style>
+    body{
+            background-image: url(https://firebasestorage.googleapis.com/v0/b/iris-storage.appspot.com/o/images%2FUSC-logo.jpg?alt=media&token=ec1c4327-d562-4a06-8ed5-a219c4168625);
+        }
+    #showData {
+        margin: 1px;
+        padding: 1px;
+        text-align: center;
+        border-collapse: collapse
+    }
+    p {
+
+        color: rgb(255, 255, 255);
+    }
+    input {
+        background-color: rgba(7, 179, 185, 0.753);
+        color: rgb(255, 255, 255);
+         margin-top:20px;
+            height: 30px;
+            width: 150px;
+            padding: 12px 20px;
+            border-radius: 5px;
+            color: black;
+    }
+      input[type="button"]{
+            background-color: rgba(7, 179, 185, 0.753);
+            color: rgb(255, 255, 255);
+            border: none;
+            border-radius: 5px;
+
+        }
+      td {
+          color: rgb(255, 255, 255);
+      }
+      table {
+            background-color: rgba(7, 179, 185, 0.753);
+            margin: 1px;
+            padding: 1px;
+            text-align: center;
+            border-collapse: collapse ;
+            color: rgb(255, 255, 255);
+      }
+    button{
+            background-color: rgba(7, 179, 185, 0.753);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            opacity: 0.3;
+            height: 30px;
+            line-height: 30px;
+            vertical-align: middle;
+            width : 120px;
+        }
+</style>
+</head>
+<body>
+<div style="text-align: center">
+<table style = "width: 239px;margin:auto">
+    <tr>
+        <td id = "cont1" onmouseover="Show1()" onmouseout="Hide1()" class = "style1">Iris-DataSet</td>
+        <td id="cont2" onmouseover="Show2()" onmouseout="Hide2()" class = "style2" >metadata-text</td>
+        <td id="cont3" onmouseover="Show3()" onmouseout="Hide3()" class = "style3" >metadata-nontext</td>
+        <td id="cont4" onmouseover="Show4()" onmouseout="Hide4()" class = "style4" >Extract features</td>
+        <td id="cont5" onmouseover="Show5()" onmouseout="Hide5()" class = "style5">Build Model</td>
+    </tr>
+
+</table></div>
+<div id = "dataset">
+
+    <input type="button" onclick = "CreateTableFromJSON()" value = "Show dataset"/>
+    <div id = "showData"></div>
+
+</div>
+<div id = "metadata-text">
+    <input type="button" onclick = "gettextmetadata()" value = "Show textual metadata"/>
+    <div id = "showtextdata"></div>
+
+</div>
+<div id = "metadata-nontext">
+                {% load static %}
+                <img  src= "{% static 'Iris_pic.jpg' %}" style ="height: 220px; width:230px"/>
+    <br>
+    <input type = "button" onclick = "getimagemetadata()" value = "show image metadata"/>
+    <div id = "showimagedata"></div>
+
+</div>
+<div id="extract-features">
+    <form  method = "GET" action="/main_fw" id="dropdown_menu_form">
+
+
+            <label> pick the number of features you want to use:
+
+                <select name = "features_extract" form="dropdown_menu_form">
+                    <option  selected value="1">1</option>
+                    <option  value="2">2</option>
+                    <option  value="3">3</option>
+                    <option  value="4">4</option>
+                    <option  value="5">5</option>
+                    <option  value="6">6</option>
+                    <option  value="7">7</option>
+                    <option  value="8">8</option>
+                    <option  value="9">9</option>
+                    <option  value="10">10</option>
+                    <option  value="11">11</option>
+                    <option  value="12">12</option>
+                    <option  value="13">13</option>
+                    <option  value="14">14</option>
+                    <option  value="15">15</option>
+                    <option  value="16">16</option>
+                    <option  value="17">17</option>
+                    <option  value="18">18</option>
+                    <option  value="19">19</option>
+                    <option  value="20">20</option>
+                    <option  value="21">21</option>
+                    <option  value="22">22</option>
+                    <option  value="23">23</option>
+                    <option  value="24">24</option>
+                    <option  value="25">25</option>
+                    <option  value="26">26</option>
+                    <option  value="27">27</option>
+                    <option  value="28">28</option>
+                    <option  value="29">29</option>
+                    <option  value="30">30</option>
+                </select>
+
+            </label>
+        <br>
+       <input type = "reset" value="reset" style ="color: white">&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" value="submit" style ="color: white">
+    </form>
+
+
+</div>
+<div id="build-model">
+    <input type = "button" onclick = "Model_Build()" value = "Build"/>
+</div>
+<script type="text/javascript">
+
+
+function getimagemetadata() {
+    var message = {{imgdata|safe}};
+    var dataNode = document.getElementById("showimagedata");
+    dataNode.innerHTML = "";
+    for (var key in message) {
+        var para = document.createElement("p");
+        var txt = document.createTextNode(key+" : " + message[key]);
+        para.appendChild(txt);
+
+        dataNode.appendChild(para);
+    }
+
+
+}
+function Model_Build() {
+    var message = {{ user_model |safe}};
+    var dataNode = document.getElementById("build-model");
+    if (message == 0){
+        dataNode.innerHTML = "<p>You have not chosen any features yet!</p>>";
+    }
+    else {
+        var message_2 = {{ build |safe}};
+        message_2 = String(message_2);
+        dataNode.innerHTML = "<p>"+"The Model has Built sucessfully. The error rate is"+ message_2+"</p>";
+    }
+}
+//数据格式为 data = [{'a':.., 'b':.., 'c':..},{'a':.., 'b':.., 'c':..}...]
+function CreateTableFromJSON() {
+    var message =  {{ data|safe }} ; //将json数据传到js
+    var col = ["Id","PetalAreacm2", "PetalLengthCm","PetalWidthCm","SepalAreacm2","SepalLengthCm","SepalWidthCm","Species"]
+    var table = document.createElement("table"); //创建一个table标签
+    table.style.border = "1px solid #B0C4DE"; //设置该table标签的属性
+    table.cellSpacing="0";
+    table.cellPadding="0";
+    var tr = table.insertRow(-1); //给table添加第一行 -1代表最后一行的意思，一开始是空所以是第一一行
+
+    for (var i = 0; i < col.length; i++)  { //遍历features 列表，将features 每一个值放入head行中
+        var th = document.createElement("th"); //创建表格的head标签，th为标准的tag格式代表表格的head
+        th.innerHTML = col[i]; //将数据写入该单元格中
+        th.style.border = "1px solid #B0C4DE";
+        tr.appendChild(th); //将该单元格添加到当前行
+    }
+    for (var i = 0; i < message.length; i++) {
+        var tr = table.insertRow(-1); //遍历数据的每一行，所以我们要创循环创建新的一行表格，message数组中一个元素为一条数据，所以每遍历一个元素，我们就加了一行数据
+
+        for (var j = 0; j < col.length; j++) {  //遍历col数组，获取feature对应的数据
+            var tabCell = tr.insertCell(-1); // 在表格末尾创建新的一个单元格
+            tabCell.innerHTML = message[i][col[j]]; //把数据写入该单元格
+            tabCell.style.border = "1px solid #B0C4DE";
+        }
+    }
+    var dataNode = document.getElementById("showData"); //与html中的id 为showData的标签关联
+    dataNode.innerHTML = "";
+    dataNode.appendChild(table);  //将table该标签附上去
+    }
+function Show1() {
+            document.getElementById("dataset").style.display = 'Block';
+            document.getElementById("metadata-text").style.display = 'None';
+            document.getElementById("metadata-nontext").style.display = 'None';
+            document.getElementById("extract-features").style.display = 'None';
+            document.getElementById("build-model").style.display = 'None';
+            document.getElementById("cont1").style.backgroundColor = "DarkOrchid";
+            document.getElementById("cont1").style.color = "White";
+
+}
+function Show2() {
+            document.getElementById("dataset").style.display = 'None';
+            document.getElementById("metadata-text").style.display = 'Block';
+            document.getElementById("metadata-nontext").style.display = 'None';
+            document.getElementById("extract-features").style.display = 'None';
+            document.getElementById("build-model").style.display = 'None';
+            document.getElementById("cont2").style.backgroundColor = "DarkOrchid";
+            document.getElementById("cont2").style.color = "White";
+
+}
+function Show3() {
+            document.getElementById("dataset").style.display = 'None';
+            document.getElementById("metadata-text").style.display = 'None';
+            document.getElementById("metadata-nontext").style.display = 'Block';
+            document.getElementById("extract-features").style.display = 'None';
+            document.getElementById("build-model").style.display = 'None';
+            document.getElementById("cont3").style.backgroundColor = "DarkOrchid";
+            document.getElementById("cont3").style.color = "White";
+
+}
+function Show4() {
+            document.getElementById("dataset").style.display = 'None';
+            document.getElementById("metadata-text").style.display = 'None';
+            document.getElementById("metadata-nontext").style.display = 'None';
+            document.getElementById("extract-features").style.display = 'Block';
+            document.getElementById("build-model").style.display = 'None';
+            document.getElementById("cont4").style.backgroundColor = "DarkOrchid";
+            document.getElementById("cont4").style.color = "White";
+
+}
+
+function Show5() {
+            document.getElementById("dataset").style.display = 'None';
+            document.getElementById("metadata-text").style.display = 'None';
+            document.getElementById("metadata-nontext").style.display = 'None';
+            document.getElementById("extract-features").style.display = 'None';
+            document.getElementById("build-model").style.display = 'Block';
+            document.getElementById("cont5").style.backgroundColor = "DarkOrchid";
+            document.getElementById("cont5").style.color = "White";
+
+}
+function Hide1() {
+    document.getElementById('cont1').style.backgroundColor = "rgba(7, 179, 185, 0.753)";
+    document.getElementById('cont1').style.color = "White";
+}
+function Hide2() {
+    document.getElementById('cont2').style.backgroundColor = "rgba(7, 179, 185, 0.753)";
+    document.getElementById('cont2').style.color = "White";
+}
+function Hide3() {
+    document.getElementById('cont3').style.backgroundColor = "rgba(7, 179, 185, 0.753)";
+    document.getElementById('cont3').style.color = "White";
+}
+function Hide4() {
+    document.getElementById('cont4').style.backgroundColor = "rgba(7, 179, 185, 0.753)";
+    document.getElementById('cont4').style.color = "White";
+}
+function Hide5() {
+    document.getElementById('cont5').style.backgroundColor = "rgba(7, 179, 185, 0.753)";
+    document.getElementById('cont5').style.color = "White";
+}
+</script>
+<script>
+    function gettextmetadata() {
+       var dataNode = document.getElementById("showtextdata");
+       dataNode.innerHTML = "";
+       var dic_general = {
+       "Data Source": "Kaggle",
+       "Source Link": "https://www.kaggle.com/uciml/iris",
+       "Last updated": "2016-09-27",
+       "Date Created": "2016-01-11"
+       }
+       var dic_features = {
+            "Id": "the id number of the data",
+            "SepalLengthCm" : "the Length of Sepal (cm)",
+            "SepalAreacm2" : "the area of sepal (cm^2)",
+            "SepalWidthCm" : "the width of sepal (cm)",
+            "PetalWidthCm" : "the width of Petal (cm)",
+            "PetalAreacm2" : "the area of Petal (cm^2)",
+            "PetalLengthCm" : "the length of Petal (cm)",
+            "Species" : "the species of this data",
+            "field1" : "the field of the data"
+       }
+       for (var key in dic_general) {
+        var para = document.createElement("p");
+        var txt = document.createTextNode(key+" : " + dic_general[key]);
+        //txt.style.color = "White";
+        para.appendChild(txt);
+        dataNode.appendChild(para);
+    }
+        for (var key in dic_features) {
+        var para = document.createElement("p");
+        var txt = document.createTextNode(key+" : " + dic_features[key]);
+        //txt.style.color = "White";
+        para.appendChild(txt);
+        dataNode.appendChild(para);
+    }
+
+}
+</script>
+</body>
+
+</html>
+
