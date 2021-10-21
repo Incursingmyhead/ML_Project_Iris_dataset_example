@@ -21,5 +21,5 @@ urlpatterns = [
     #path('', views.check),
     path('', views.Data_pst),
     path('main_fw/', views.get_data, name='get_data'),
-
+    path('feature-val/', views.predict_form, name='prediction')
 ]

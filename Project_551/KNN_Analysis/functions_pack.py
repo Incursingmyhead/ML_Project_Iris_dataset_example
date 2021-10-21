@@ -12,10 +12,12 @@ from pyspark.sql.session import SparkSession
 from pyspark.ml.linalg import Vector, Vectors
 from pyspark.sql import Row, functions
 from pyspark.ml.feature import IndexToString, StringIndexer, VectorIndexer, HashingTF, Tokenizer
-
+import numpy as np
 
 realdatabase = {"irisDataset":"-Mlx-NOWHDKC4_iutpXB"}
 model = dict()
+num_features = 0
+mapp = {0:"Iris-setosa",1:"Iris-versicolor",2:"Iris-virginica"}
 def getimagedata():
 
     data = Image.open('static/Iris_pic.jpg')
@@ -88,6 +90,7 @@ def get_database_data(): #从realtime database获取数据库
 
 def model_building(URL):
     global model
+
     resp = requests.get(URL)
     dataset = resp.text
     dataset = json.loads(dataset)
@@ -101,6 +104,22 @@ def model_building(URL):
     print(MSE)
     model['model'] = clf
     return MSE
+def prediction(string):
+    print(string)
+    arr = string.split(" ")
+    global mapp
+
+    for i in range(len(arr)):
+        arr[i] = float(arr[i])
+    global model
+    if not model:
+        return 0
+    else:
+        clf = model['model']
+        pred = clf.predict(np.array([arr]))
+        return mapp[int(pred.tolist()[0])]
+
+
 def gen_json_file():
     df = get_database_data()
     file_name = 'dataset.json'
@@ -118,7 +137,8 @@ def reconstruct_data(features,df):
 
 def features_selector(num_fetaures):
     df = get_database_data()
-
+    global num_features
+    num_features = num_fetaures
     f2 = open('dataset.json','w')
     f2.write(df)
     f2.close()
@@ -170,7 +190,7 @@ def features_selector(num_fetaures):
     converter = IndexToString(inputCol="indexedLabel", outputCol="originalCategory")
     full_crossdt = converter.transform(full_crossdt)
     tmp_df = full_crossdt.select("features", "indexedLabel")
-    selector = ChiSqSelector(numTopFeatures=int(num_fetaures), featuresCol="features",
+    selector = ChiSqSelector(numTopFeatures=int(num_features), featuresCol="features",
                              outputCol="selectedFeatures", labelCol="indexedLabel")
     result = selector.fit(tmp_df).transform(tmp_df)
 
