@@ -73,9 +73,9 @@ I did not just use the above original features. I added their cross products as 
 
 #### The machine learning algorithm:
  
-This project used the Linear Discriminant Analysis as the machine learning Algorithm method. The reason that I choosed LDA but not Logistic Regression Algorithm is:
+This project used the Quadratic Discriminant Analysis as the machine learning Algorithm method. The reason that I choosed QDA but not Logistic Regression Algorithm is:
 
-LDA is better than Logistic regression:
+QDA is better than Logistic regression:
 
 **1. when we have a small dataset.**
 
