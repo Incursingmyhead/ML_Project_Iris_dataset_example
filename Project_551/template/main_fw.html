@@ -69,8 +69,11 @@
         <td id="cont3" onmouseover="Show3()" onmouseout="Hide3()" class = "style3" >metadata-nontext</td>
         <td id="cont4" onmouseover="Show4()" onmouseout="Hide4()" class = "style4" >Extract features</td>
         <td id="cont5" onmouseover="Show5()" onmouseout="Hide5()" class = "style5">Build Model</td>
+
+
         <td id = "cont6" onmouseover = "Show6()" onmouseout="Hide6()" class = "style6">Enter Value</td>
         <td id = "cont7" onmouseover = "Show7()" onmouseout="Hide7()" class = "style7">Prediction</td>
+
     </tr>
 
 </table></div>
@@ -142,6 +145,10 @@
 <div id="build-model">
     <input type = "button" onclick = "Model_Build()" value = "Build"/>
 </div>
+
+
+
+
 <div id="feature">
     <form id="prediction_form" name="prediction_form" method = "get" action = "/feature-val">
         <label> The feature values you want to use (use space to seperately):
@@ -157,18 +164,20 @@
 <div id ="prediction">
     <input type = "button" onclick = "Prediction()" value = "Predict"/>
 </div>
-<script type="text/javascript">
-function Prediction(){
-    var message = {{pred|safe}};
-    var dataNode = document.getElementById("prediction");
-    dataNode.innerHTML = "";
+
+<script>
+    function Prediction() {
+        var message = {{pred|safe}};
+        var dataNode = document.getElementById("prediction");
+        dataNode.innerHTML = "";
     if (message=="0"){
         dataNode.innerHTML="<p>You have not entered any information or chosen number of features yet!</p>";
     }
     else {
-        dataNode.innerHTML = "<p> Based on your entered information, the prediction category is " +message +".</p>"
+        dataNode.innerHTML = "<p> Based on your entered information, the prediction category is " +message +".</p>";
     }
 }
+
 
 function getimagemetadata() {
     var message = {{imgdata|safe}};
@@ -178,7 +187,6 @@ function getimagemetadata() {
         var para = document.createElement("p");
         var txt = document.createTextNode(key+" : " + message[key]);
         para.appendChild(txt);
-
         dataNode.appendChild(para);
     }
 
@@ -188,7 +196,7 @@ function Model_Build() {
     var message = {{ user_model |safe}};
     var dataNode = document.getElementById("build-model");
     if (message == 0){
-        dataNode.innerHTML = "<p>You have not chosen any features yet!</p>>";
+        dataNode.innerHTML = "<p>You have not chosen any features yet!</p>";
     }
     else {
         var message_2 = {{ build |safe}};
@@ -212,6 +220,7 @@ function CreateTableFromJSON() {
         th.style.border = "1px solid #B0C4DE";
         tr.appendChild(th); //将该单元格添加到当前行
     }
+
     for (var i = 0; i < message.length; i++) {
         var tr = table.insertRow(-1); //遍历数据的每一行，所以我们要创循环创建新的一行表格，message数组中一个元素为一条数据，所以每遍历一个元素，我们就加了一行数据
 
@@ -233,6 +242,7 @@ function Show1() {
             document.getElementById("build-model").style.display = 'None';
             document.getElementById("feature").style.display = 'None';
             document.getElementById("prediction").style.display = 'None';
+
             document.getElementById("cont1").style.backgroundColor = "DarkOrchid";
             document.getElementById("cont1").style.color = "White";
 
@@ -255,8 +265,10 @@ function Show3() {
             document.getElementById("metadata-nontext").style.display = 'Block';
             document.getElementById("extract-features").style.display = 'None';
             document.getElementById("build-model").style.display = 'None';
+
             document.getElementById("feature").style.display = 'None';
             document.getElementById("prediction").style.display = 'None';
+
             document.getElementById("cont3").style.backgroundColor = "DarkOrchid";
             document.getElementById("cont3").style.color = "White";
 
@@ -267,6 +279,7 @@ function Show4() {
             document.getElementById("metadata-nontext").style.display = 'None';
             document.getElementById("extract-features").style.display = 'Block';
             document.getElementById("build-model").style.display = 'None';
+
             document.getElementById("feature").style.display = 'None';
             document.getElementById("prediction").style.display = 'None';
             document.getElementById("cont4").style.backgroundColor = "DarkOrchid";
@@ -282,10 +295,12 @@ function Show5() {
             document.getElementById("build-model").style.display = 'Block';
             document.getElementById("feature").style.display = 'None';
             document.getElementById("prediction").style.display = 'None';
+
             document.getElementById("cont5").style.backgroundColor = "DarkOrchid";
             document.getElementById("cont5").style.color = "White";
 
 }
+
 function Show6() {
             document.getElementById("dataset").style.display = 'None';
             document.getElementById("metadata-text").style.display = 'None';
@@ -310,6 +325,7 @@ function Show7() {
             document.getElementById("cont7").style.color = "White";
 
 }
+
 function Hide1() {
     document.getElementById('cont1').style.backgroundColor = "rgba(7, 179, 185, 0.753)";
     document.getElementById('cont1').style.color = "White";
@@ -330,6 +346,7 @@ function Hide5() {
     document.getElementById('cont5').style.backgroundColor = "rgba(7, 179, 185, 0.753)";
     document.getElementById('cont5').style.color = "White";
 }
+
 function Hide6() {
     document.getElementById('cont6').style.backgroundColor = "rgba(7, 179, 185, 0.753)";
     document.getElementById('cont6').style.color = "White";
@@ -338,6 +355,7 @@ function Hide7() {
     document.getElementById('cont7').style.backgroundColor = "rgba(7, 179, 185, 0.753)";
     document.getElementById('cont7').style.color = "White";
 }
+
 </script>
 <script>
     function gettextmetadata() {
